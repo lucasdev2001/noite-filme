@@ -130,7 +130,7 @@ function App() {
   const FilmeSorteado = (props) => {
     return (
       <>
-        <div className="p-xl-0 p-1">
+        <div className="p-xl-0 p-3">
           <span className="fs-3">🎉</span>
           <span className="lead flex-fill">{props.filme}</span>
           <span className="fs-3">🎉</span>
@@ -142,7 +142,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className="container p-5">
+      <div className="container-lg container-fluid p-xl-5">
         <div className="d-flex row">
           <div className="col-xl-6 flex-xl-fill">
             <h1 className="mb-3 text-center text-xl-start">
