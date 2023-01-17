@@ -13,7 +13,7 @@ function App() {
   useEffect(() => {
     JSON.parse(localStorage.getItem("listaFilmes"))?.length !== 0
       ? setListaFilmes(JSON.parse(localStorage.getItem("listaFilmes")))
-      : console.log("a lista estava vazia");
+      : setFilmesSorteados([]);
   }, []);
 
   useEffect(() => {
@@ -106,10 +106,10 @@ function App() {
     return (
       <>
         <div className="p-xl-0 p-1">
-        <span className="fs-3">🎉</span>
-        <span className="lead flex-fill">{props.filme}</span>
-        <span className="fs-3">🎉</span>
-        <br />
+          <span className="fs-3">🎉</span>
+          <span className="lead flex-fill">{props.filme}</span>
+          <span className="fs-3">🎉</span>
+          <br />
         </div>
       </>
     );
@@ -127,12 +127,12 @@ function App() {
           <div className="col-xl-5 order-xl-2 text-center text-xl-start">
             <div>
               <p className="lead">filmes sorteados</p>
-              <div class="d-grid gap-2 mb-3">
+              <div className="d-grid gap-2 mb-3">
                 <button
                   type="button"
                   name=""
                   id=""
-                  class="btn btn-primary"
+                  className="btn btn-primary"
                   onClick={() => {
                     setFilmesSorteados([]);
                   }}
@@ -146,7 +146,9 @@ function App() {
                 💁‍♀️ nenhum filme foi sorteado ainda 💁‍♀️
               </p>
             ) : (
-              filmesSorteados.map((filme) => <FilmeSorteado filme={filme} />)
+              filmesSorteados.map((filme, index) => (
+                <FilmeSorteado filme={filme} key={index} />
+              ))
             )}
           </div>
           <div className="col-xl-6 flex-xl-fill order-xl-1">
@@ -173,9 +175,9 @@ function App() {
             </div>
 
             <ol className="list-group list-group-numbered text-start mb-3 mt-3">
-              {listaFilmes.map((filme, index) => {
-                return <ItemFilme filme={filme} key={index} id={filme} />;
-              })}
+              {listaFilmes.map((filme, index) => (
+                <ItemFilme filme={filme} key={index} id={filme} />
+              ))}
             </ol>
             <div className="text-center text-xl-start mt-3 mb-3">
               <a href="#sortear" onClick={handleSorteio}>
