@@ -7,6 +7,7 @@ function App() {
   const [inputs, setInputs] = useState({});
   const [listaFilmes, setListaFilmes] = useState([]);
   const [filmesSorteados, setFilmesSorteados] = useState([]);
+  const [mensagemValidacao, setMensagemValidacao] = useState(null);
 
   //useEffects
 
@@ -38,7 +39,10 @@ function App() {
       localStorage.setItem("listaFilmes", JSON.stringify(listaFilmes));
       inputFilme.value = "";
     } else {
-      console.log("não aceita-se vazio");
+      setMensagemValidacao("Você precisa dar um nome para o filme 😁")
+      setTimeout(() => {
+        setMensagemValidacao(null)
+      }, 5000);
     }
   };
 
@@ -76,12 +80,24 @@ function App() {
   };
 
   const handleSorteio = () => {
-    listaFilmes.at(-1).length === 0
-      ? console.log("não podemos sortear uma lista vazia")
-      : setTimeout(() => {
-          let index = Math.floor(Math.random() * listaFilmes.length);
-          setFilmesSorteados((current) => [...current, listaFilmes[index]]);
-        }, 500);
+    let index;
+    for (let i = 0; i < 5; i++) {
+      index = Math.floor(Math.random().toPrecision(7) * listaFilmes.length);
+    }
+    // setFilmesSorteados((current) => [...current, listaFilmes[index]]);
+    if (listaFilmes.length === 0) {
+      setMensagemValidacao("Não consigo sortear uma lista vazia 😔")
+      setTimeout(() => {
+        setMensagemValidacao(null)
+      }, 5000);
+    } else if (filmesSorteados.length >= 5) {
+      setMensagemValidacao("Você realizou muitos sorteios 😵 🤯")
+      setTimeout(() => {
+        setMensagemValidacao(null)
+      }, 5000);
+    } else {
+      setFilmesSorteados((current) => [...current, listaFilmes[index]]);
+    }
   };
 
   //componentes
@@ -103,6 +119,14 @@ function App() {
     );
   };
 
+  const MensagemValidacao = (props) => {
+    return (
+      <div className="alert alert-warning" role="alert">
+        {props.mensagem}
+      </div>
+    );
+  };
+
   const FilmeSorteado = (props) => {
     return (
       <>
@@ -119,11 +143,17 @@ function App() {
   return (
     <div className="App">
       <div className="container p-5">
-        <h1 className="mb-3 text-center text-xl-start">
-          Escolhedor de filmes-ilmes{" "}
-          <span className="d-xl-inline d-none">🎥</span>
-        </h1>
-
+        <div className="d-flex row">
+          <div className="col-xl-6 flex-xl-fill">
+            <h1 className="mb-3 text-center text-xl-start">
+              Escolhedor de filmes-ilmes
+              <span className="d-xl-inline d-none">🎥</span>
+            </h1>
+          </div>
+          <div className="col-xl-5">
+            {mensagemValidacao && <MensagemValidacao mensagem={mensagemValidacao}/>}
+          </div>
+        </div>
         <div className="d-flex row">
           <div className="col-xl-5 order-xl-2 text-center text-xl-start">
             <div>
