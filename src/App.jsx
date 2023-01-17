@@ -39,9 +39,9 @@ function App() {
       localStorage.setItem("listaFilmes", JSON.stringify(listaFilmes));
       inputFilme.value = "";
     } else {
-      setMensagemValidacao("Você precisa dar um nome para o filme 😁")
+      setMensagemValidacao("Você precisa dar um nome para o filme 😁");
       setTimeout(() => {
-        setMensagemValidacao(null)
+        setMensagemValidacao(null);
       }, 5000);
     }
   };
@@ -86,14 +86,14 @@ function App() {
     }
     // setFilmesSorteados((current) => [...current, listaFilmes[index]]);
     if (listaFilmes.length === 0) {
-      setMensagemValidacao("Não consigo sortear uma lista vazia 😔")
+      setMensagemValidacao("Não consigo sortear uma lista vazia 😔");
       setTimeout(() => {
-        setMensagemValidacao(null)
+        setMensagemValidacao(null);
       }, 5000);
     } else if (filmesSorteados.length >= 5) {
-      setMensagemValidacao("Você realizou muitos sorteios 😵 🤯")
+      setMensagemValidacao("Você realizou muitos sorteios 😵 🤯");
       setTimeout(() => {
-        setMensagemValidacao(null)
+        setMensagemValidacao(null);
       }, 5000);
     } else {
       setFilmesSorteados((current) => [...current, listaFilmes[index]]);
@@ -151,11 +151,13 @@ function App() {
             </h1>
           </div>
           <div className="col-xl-5">
-            {mensagemValidacao && <MensagemValidacao mensagem={mensagemValidacao}/>}
+            {mensagemValidacao && (
+              <MensagemValidacao mensagem={mensagemValidacao} />
+            )}
           </div>
         </div>
         <div className="d-flex row">
-          <div className="col-xl-5 order-xl-2 text-center text-xl-start">
+          <div className="col-xl-5 order-xl-2 text-center text-xl-start border rounded-3">
             <div>
               <p className="lead">filmes sorteados</p>
               <div className="d-grid gap-2 mb-3">
@@ -173,9 +175,12 @@ function App() {
               </div>
             </div>
             {filmesSorteados.length === 0 ? (
-              <p className="text-secondary text-center">
-                💁‍♀️ nenhum filme foi sorteado ainda 💁‍♀️
-              </p>
+              <div>
+                <p className="text-secondary text-center">
+                  nenhum filme foi sorteado ainda
+                </p>
+                <img src={import.meta.env.BASE_URL + "/what-huh.gif"} className="img-fluid rounded-3 mb-3" />
+              </div>
             ) : (
               filmesSorteados.map((filme, index) => (
                 <FilmeSorteado filme={filme} key={index} />
