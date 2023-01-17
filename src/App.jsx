@@ -8,20 +8,25 @@ function App() {
   const [listaFilmes, setListaFilmes] = useState([]);
   const [filmesSorteados, setFilmesSorteados] = useState([]);
   const [mensagemValidacao, setMensagemValidacao] = useState(null);
+  const [primeiroRender, setPrimeiroRender] = useState(true);
 
   //useEffects
 
   useEffect(() => {
-    JSON.parse(localStorage.getItem("listaFilmes"))?.length !== 0
-      ? setListaFilmes(JSON.parse(localStorage.getItem("listaFilmes")))
-      : setFilmesSorteados([]);
+    if (JSON.parse(localStorage.getItem("listaFilmes"))) {
+      setListaFilmes(JSON.parse(localStorage.getItem("listaFilmes")));
+      setPrimeiroRender(false);
+    } else {
+      setPrimeiroRender(false);
+    }
   }, []);
+  //handlers
 
   useEffect(() => {
-    localStorage.setItem("listaFilmes", JSON.stringify(listaFilmes));
+    if (primeiroRender === false) {
+      localStorage.setItem("listaFilmes", JSON.stringify(listaFilmes));
+    }
   }, [listaFilmes]);
-
-  //handlers
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -35,7 +40,7 @@ function App() {
   const handleAdicionarFilme = (e) => {
     const inputFilme = document.querySelector("#input_filme");
     if (inputFilme.value !== "") {
-      setListaFilmes((current) => [...current, inputs.input_filme]);
+      setListaFilmes([...listaFilmes, inputs.input_filme]);
       localStorage.setItem("listaFilmes", JSON.stringify(listaFilmes));
       inputFilme.value = "";
     } else {
@@ -179,7 +184,10 @@ function App() {
                 <p className="text-secondary text-center">
                   nenhum filme foi sorteado ainda
                 </p>
-                <img src={import.meta.env.BASE_URL + "/what-huh.gif"} className="img-fluid rounded-3 mb-3" />
+                <img
+                  src={import.meta.env.BASE_URL + "/what-huh.gif"}
+                  className="img-fluid rounded-3 mb-3"
+                />
               </div>
             ) : (
               filmesSorteados.map((filme, index) => (
@@ -211,9 +219,10 @@ function App() {
             </div>
 
             <ol className="list-group list-group-numbered text-start mb-3 mt-3">
-              {listaFilmes?.map((filme, index) => (
-                <ItemFilme filme={filme} key={index} id={filme} />
-              ))}
+              {listaFilmes &&
+                listaFilmes.map((filme, index) => (
+                  <ItemFilme filme={filme} key={index} id={filme} />
+                ))}
             </ol>
             <div className="text-center text-xl-start mt-3 mb-3">
               <a href="#sortear" onClick={handleSorteio}>
