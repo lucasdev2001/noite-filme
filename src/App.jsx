@@ -49,6 +49,7 @@ function App() {
       setTimeout(() => {
         setMensagemValidacao(null);
       }, 5000);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -96,11 +97,13 @@ function App() {
       setTimeout(() => {
         setMensagemValidacao(null);
       }, 5000);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (filmesSorteados.length >= 5) {
       setMensagemValidacao("Você realizou muitos sorteios 😵 🤯");
       setTimeout(() => {
         setMensagemValidacao(null);
       }, 5000);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setFilmesSorteados((current) => [...current, listaFilmes[index]]);
     }
@@ -162,21 +165,22 @@ function App() {
             )}
           </div>
         </div>
-        <div className="d-flex row">
-          <div className="col-xl-5 order-xl-2 text-center text-xl-start border rounded-3">
+        <div className="d-flex row g-xl-0 g-3">
+          <div className="col-xl-5 order-xl-2 text-center text-xl-start border border-dark rounded-4 border-4 p-3">
             <div>
-              <div className="d-grid gap-2 mb-3 mt-3">
+              <div className="d-grid gap-2 mb-3">
+                {filmesSorteados.length !== 0 &&
                 <button
-                  type="button"
-                  name=""
-                  id=""
-                  className="btn btn-primary"
-                  onClick={() => {
-                    setFilmesSorteados([]);
-                  }}
-                >
-                  limpar
-                </button>
+                type="button"
+                name=""
+                id=""
+                className="btn btn-primary"
+                onClick={() => {
+                  setFilmesSorteados([]);
+                }}
+              >
+                limpar
+              </button>}
               </div>
             </div>
             {filmesSorteados.length === 0 ? (
@@ -195,7 +199,7 @@ function App() {
               ))
             )}
           </div>
-          <div className="col-xl-6 flex-xl-fill order-xl-1 p-3">
+          <div className="col-xl-6 flex-xl-fill order-xl-1 p-3  rounded-4 me-3 ">
             <input
               type="text"
               name="input_filme"
@@ -222,7 +226,7 @@ function App() {
                   <ItemFilme filme={filme} key={index} id={filme} />
                 ))}
             </ol>
-            <div className="text-center text-xl-start mt-3 mb-3">
+            <div className="text-center text-xl-start mb-3">
               <a href="#sortear" onClick={handleSorteio}>
                 <img
                   src={import.meta.env.BASE_URL + "/dice-5-fill.svg"}
