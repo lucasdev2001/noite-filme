@@ -49,7 +49,7 @@ function App() {
       setTimeout(() => {
         setMensagemValidacao(null);
       }, 5000);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -97,13 +97,13 @@ function App() {
       setTimeout(() => {
         setMensagemValidacao(null);
       }, 5000);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (filmesSorteados.length >= 5) {
       setMensagemValidacao("Você realizou muitos sorteios 😵 🤯");
       setTimeout(() => {
         setMensagemValidacao(null);
       }, 5000);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       setFilmesSorteados((current) => [...current, listaFilmes[index]]);
     }
@@ -139,7 +139,7 @@ function App() {
   const FilmeSorteado = (props) => {
     return (
       <>
-        <div className="p-xl-0 p-3">
+        <div className="p-xl-0 p-3 m-3">
           <span className="fs-3">🎉</span>
           <span className="lead flex-fill">{props.filme}</span>
           <span className="fs-3">🎉</span>
@@ -169,28 +169,31 @@ function App() {
           <div className="col-xl-5 order-xl-2 text-center text-xl-start border border-dark rounded-4 border-4 p-3">
             <div>
               <div className="d-grid gap-2 mb-3">
-                {filmesSorteados.length !== 0 &&
-                <button
-                type="button"
-                name=""
-                id=""
-                className="btn btn-primary"
-                onClick={() => {
-                  setFilmesSorteados([]);
-                }}
-              >
-                limpar
-              </button>}
+                {filmesSorteados.length !== 0 && (
+                  <button
+                    type="button"
+                    name=""
+                    id=""
+                    className="btn btn-primary m-2"
+                    onClick={() => {
+                      setFilmesSorteados([]);
+                    }}
+                  >
+                    limpar
+                  </button>
+                )}
               </div>
             </div>
+            {filmesSorteados.length === 0 && (
+              <p className="text-secondary text-center">
+                nenhum filme foi sorteado ainda
+              </p>
+            )}
             {filmesSorteados.length === 0 ? (
               <div>
-                <p className="text-secondary text-center">
-                  nenhum filme foi sorteado ainda
-                </p>
                 <img
                   src={import.meta.env.BASE_URL + "/what-huh.gif"}
-                  className="img-fluid rounded-3 mb-3"
+                  className="img-fluid rounded-4 p-1"
                 />
               </div>
             ) : (
