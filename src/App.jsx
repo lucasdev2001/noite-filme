@@ -18,6 +18,7 @@ function App() {
       setPrimeiroRender(false);
     } else {
       setPrimeiroRender(false);
+      console.log("A lista estava vazia");
     }
   }, []);
   //handlers
@@ -164,8 +165,7 @@ function App() {
         <div className="d-flex row">
           <div className="col-xl-5 order-xl-2 text-center text-xl-start border rounded-3">
             <div>
-              <p className="lead">filmes sorteados</p>
-              <div className="d-grid gap-2 mb-3">
+              <div className="d-grid gap-2 mb-3 mt-3">
                 <button
                   type="button"
                   name=""
@@ -195,10 +195,7 @@ function App() {
               ))
             )}
           </div>
-          <div className="col-xl-6 flex-xl-fill order-xl-1">
-            <p className="lead text-center text-xl-start">
-              Qual o nome do filme menor ?
-            </p>
+          <div className="col-xl-6 flex-xl-fill order-xl-1 p-3">
             <input
               type="text"
               name="input_filme"
@@ -206,6 +203,7 @@ function App() {
               className="form-control mb-3"
               onChange={handleInputChange}
               onKeyDown={handleKeyPress}
+              placeholder="Nome do filme"
             />
             <div className="d-grid gap-2">
               <button
