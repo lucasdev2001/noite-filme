@@ -60,7 +60,7 @@ function App() {
     function mudarImagem() {
       let index = Math.floor(Math.random() * (7 - 1) + 1);
       imagemDado.src = `${import.meta.env.BASE_URL}/dice-${index}-fill.svg`;
-      
+
       imagemDado.classList.toggle("bg-primary");
     }
     imagemDado.addEventListener("mouseout", () => {
@@ -81,7 +81,7 @@ function App() {
       : setTimeout(() => {
           let index = Math.floor(Math.random() * listaFilmes.length);
           setFilmesSorteados((current) => [...current, listaFilmes[index]]);
-        }, 1000);
+        }, 500);
   };
 
   //componentes
