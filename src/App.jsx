@@ -59,7 +59,7 @@ function App() {
     imagemDado.classList.add("shake");
     function mudarImagem() {
       let index = Math.floor(Math.random() * (7 - 1) + 1);
-      imagemDado.src = `/dice-${index}-fill.svg`;
+      imagemDado.src = `public/dice-${index}-fill.svg`;
       imagemDado.classList.toggle("bg-primary");
     }
     imagemDado.addEventListener("mouseout", () => {
@@ -182,7 +182,7 @@ function App() {
             <div className="text-center text-xl-start mt-3 mb-3">
               <a href="#sortear" onClick={handleSorteio}>
                 <img
-                  src="/dice-1-fill.svg"
+                  src="public/dice-1-fill.svg"
                   width={64}
                   onMouseOver={handleDadoSortearHover}
                   className="shake rounded-4"
