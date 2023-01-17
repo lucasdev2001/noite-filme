@@ -211,14 +211,14 @@ function App() {
             </div>
 
             <ol className="list-group list-group-numbered text-start mb-3 mt-3">
-              {listaFilmes.map((filme, index) => (
+              {listaFilmes?.map((filme, index) => (
                 <ItemFilme filme={filme} key={index} id={filme} />
               ))}
             </ol>
             <div className="text-center text-xl-start mt-3 mb-3">
               <a href="#sortear" onClick={handleSorteio}>
                 <img
-                  src={import.meta.env.BASE_URL + "/dice-1-fill.svg"}
+                  src={import.meta.env.BASE_URL + "/dice-5-fill.svg"}
                   width={64}
                   onMouseOver={handleDadoSortearHover}
                   className="shake rounded-4"
