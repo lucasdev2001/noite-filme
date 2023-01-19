@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 import { useEffect } from "react";
+import "@picocss/pico";
+import Nav from "./components/Nav";
 
 function App() {
   //constantes em estado
@@ -9,6 +11,10 @@ function App() {
   const [filmesSorteados, setFilmesSorteados] = useState([]);
   const [mensagemValidacao, setMensagemValidacao] = useState(null);
   const [primeiroRender, setPrimeiroRender] = useState(true);
+
+  //variaveis sem estado
+
+  let intervalDado;
 
   //useEffects
 
@@ -21,13 +27,15 @@ function App() {
       console.log("A lista estava vazia");
     }
   }, []);
-  //handlers
 
   useEffect(() => {
     if (primeiroRender === false) {
       localStorage.setItem("listaFilmes", JSON.stringify(listaFilmes));
     }
+    clearInterval(intervalDado);
   }, [listaFilmes]);
+
+  //handlers
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -42,200 +50,129 @@ function App() {
     const inputFilme = document.querySelector("#input_filme");
     if (inputFilme.value !== "") {
       setListaFilmes([...listaFilmes, inputs.input_filme]);
-      localStorage.setItem("listaFilmes", JSON.stringify(listaFilmes));
       inputFilme.value = "";
     } else {
-      setMensagemValidacao("Você precisa dar um nome para o filme 😁");
-      setTimeout(() => {
-        setMensagemValidacao(null);
-      }, 5000);
+      dispararMensagemValidacao("Você precisa dar um nome para o filme 😁");
     }
   };
 
   const handleRemoverFilme = (e) => {
     const id = e.target.id;
     setListaFilmes(listaFilmes.filter((filme) => filme !== id));
-    localStorage.setItem("listaFilmes", listaFilmes);
-  };
-
-  const handleKeyPress = (e) => {
-    const { key } = e;
-    if (key === "Enter") document.querySelector("#botao_adicionar").click();
   };
 
   const handleDadoSortearHover = (e) => {
-    const imagemDado = e.target;
-    const intervalID = setInterval(mudarImagem, 100);
-    imagemDado.classList.add("shake");
+    const dado = e.target;
+    intervalDado = setInterval(mudarImagem, 50);
     function mudarImagem() {
       let index = Math.floor(Math.random() * (7 - 1) + 1);
-      imagemDado.src = `${import.meta.env.BASE_URL}/dice-${index}-fill.svg`;
-
-      imagemDado.classList.toggle("bg-primary");
+      dado.classList.value = `bi bi-dice-${index}-fill dice-icon`;
     }
-    imagemDado.addEventListener("mouseout", () => {
-      clearInterval(intervalID);
-      imagemDado.classList.toggle("shake");
-      imagemDado.classList.remove("bg-primary");
-    });
-    imagemDado.addEventListener("click", () => {
-      clearInterval(intervalID);
-      imagemDado.classList.remove("shake");
-      imagemDado.classList.add("bg-primary");
-    });
   };
 
-  const handleSorteio = () => {
+  const handleSorteio = (e) => {
+    clearInterval(intervalDado);
     let index;
     for (let i = 0; i < 5; i++) {
       index = Math.floor(Math.random().toPrecision(7) * listaFilmes.length);
     }
-    // setFilmesSorteados((current) => [...current, listaFilmes[index]]);
     if (listaFilmes.length === 0) {
-      setMensagemValidacao("Não consigo sortear uma lista vazia 😔");
-      setTimeout(() => {
-        setMensagemValidacao(null);
-      }, 5000);
+      dispararMensagemValidacao("Não consigo sortear uma lista vazia 😔");
     } else if (filmesSorteados.length >= 5) {
-      setMensagemValidacao("Você realizou muitos sorteios 😵 🤯");
-      setTimeout(() => {
-        setMensagemValidacao(null);
-      }, 5000);
+      dispararMensagemValidacao("Você realizou muitos sorteios 😵 🤯");
     } else {
       setFilmesSorteados((current) => [...current, listaFilmes[index]]);
+      console.log(ListaFilmesSorteados);
     }
   };
+  //funções genéricas
+
+  function dispararMensagemValidacao(mensagem) {
+    setMensagemValidacao(mensagem);
+    setTimeout(() => {
+      setMensagemValidacao(null);
+    }, 5000);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   //componentes
 
-  const ItemFilme = (props) => {
-    return (
-      <>
-        <li className="list-group-item p-3 mb-3">
-          {props.filme}
-          <button
-            type="button"
-            className="btn-close position-absolute top-50 end-0 translate-middle-y me-3"
-            aria-label="Close"
-            id={props.id}
-            onClick={handleRemoverFilme}
-          ></button>
+  const ListaFilmes = (props) =>
+    props.arrFilmes.length !== 0 &&
+    props.arrFilmes.map((filme) => (
+      <ol>
+        <li>
+          {filme}
+          <a href="#remover">
+            <i
+              className="bi bi-x-circle-fill ol-close-icon"
+              onClick={props.onRemoverFilme}
+              id={filme}
+            ></i>
+          </a>
         </li>
-      </>
-    );
-  };
+      </ol>
+    ));
 
-  const MensagemValidacao = (props) => {
-    return (
-      <div className="alert alert-warning" role="alert">
-        {props.mensagem}
-      </div>
+  const ListaFilmesSorteados = (props) =>
+    props.arrfilmesSorteados.length !== 0 ? (
+      <center style={{ lineHeight: "1rem" }}>
+        <button onClick={props.onLimparSorteados}>Limpar</button>
+        {props.arrfilmesSorteados.map((filme) => (
+          <h5>🎉 {filme} 🎉</h5>
+        ))}
+      </center>
+    ) : (
+      <img src="what-huh.gif" className="place-over-image" />
     );
-  };
-
-  const FilmeSorteado = (props) => {
-    return (
-      <>
-        <div className="p-xl-0 p-3">
-          <span className="fs-3">🎉</span>
-          <span className="lead flex-fill">{props.filme}</span>
-          <span className="fs-3">🎉</span>
-          <br />
-        </div>
-      </>
-    );
-  };
-
   return (
     <div className="App">
-      <div className="container-lg container-fluid p-xl-5">
-        <div className="d-flex row">
-          <div className="col-xl-6 flex-xl-fill p-xl-3 m-xl-3">
-            <h1 className="mb-3 text-center text-xl-start">
-              Escolhedor de filmes-ilmes
-              <span className="d-xl-inline d-none">🎥</span>
-            </h1>
-          </div>
-          <div className="col-xl-5 m-xl-3">
-            {mensagemValidacao && (
-              <MensagemValidacao mensagem={mensagemValidacao} />
-            )}
-          </div>
-        </div>
-        <div className="d-flex row ">
-          <div className="col-xl-6 flex-xl-fill border border-2 rounded-3 m-xl-3 p-3">
+      <Nav />
+      <main className="container">
+        <h1>Escolhedor de filmes-ilmes 🎥</h1>
+        <div className="grid">
+          <div>
             <input
               type="text"
+              placeholder="nome do filme"
+              onChange={handleInputChange}
               name="input_filme"
               id="input_filme"
-              className="form-control mb-3"
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
+              onKeyDown={(e) => {
+                if (e.key === "Enter")
+                  document.querySelector("#botao_adicionar").click();
+              }}
             />
-            <div className="d-grid gap-2">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleAdicionarFilme}
-                id="botao_adicionar"
-              >
-                Adicionar filme
-              </button>
-            </div>
-
-            <ol className="list-group list-group-numbered text-start mb-3 mt-3">
-              {listaFilmes &&
-                listaFilmes.map((filme, index) => (
-                  <ItemFilme filme={filme} key={index} id={filme} />
-                ))}
-            </ol>
-            <div className="text-center text-xl-start mt-3 mb-3">
-              <a href="#sortear" onClick={handleSorteio}>
-                <img
-                  src={import.meta.env.BASE_URL + "/dice-5-fill.svg"}
-                  width={64}
-                  onMouseOver={handleDadoSortearHover}
-                  className="shake rounded-4"
-                />
-              </a>
-            </div>
-          </div>
-          <div className="col-xl-5 text-center text-xl-start border border-2 rounded-3 p-3 m-xl-3 mb-3 mt-4">
-            <div>
-              {filmesSorteados.length !== 0 && (
-                <div className="d-grid gap-2 mb-3">
-                  <button
-                    type="button"
-                    name=""
-                    id=""
-                    className="btn btn-primary"
-                    onClick={() => {
-                      setFilmesSorteados([]);
+            <button onClick={handleAdicionarFilme} id="botao_adicionar">
+              Adiconar filme
+            </button>
+            <ListaFilmes
+              arrFilmes={listaFilmes}
+              onRemoverFilme={handleRemoverFilme}
+            />
+            <center>
+              <div style={{ display: "inline-block" }} className="shake">
+                <a href="#sortear">
+                  <i
+                    className="bi bi-dice-5-fill dice-icon"
+                    onMouseEnter={handleDadoSortearHover}
+                    onMouseOut={() => {
+                      clearInterval(intervalDado);
                     }}
-                  >
-                    limpar
-                  </button>
-                </div>
-              )}
-            </div>
-            {filmesSorteados.length === 0 ? (
-              <div>
-                <p className="text-secondary text-center">
-                  nenhum filme foi sorteado ainda
-                </p>
-                <img
-                  src={import.meta.env.BASE_URL + "/what-huh.gif"}
-                  className="img-fluid rounded-5 mb-3 p-4"
-                />
+                    onClick={handleSorteio}
+                  ></i>
+                </a>
               </div>
-            ) : (
-              filmesSorteados.map((filme, index) => (
-                <FilmeSorteado filme={filme} key={index} />
-              ))
-            )}
+            </center>
           </div>
+          <ListaFilmesSorteados
+            arrfilmesSorteados={filmesSorteados}
+            onLimparSorteados={() => {
+              setFilmesSorteados([]);
+            }}
+          />
         </div>
-      </div>
+      </main>
     </div>
   );
 }
