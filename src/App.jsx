@@ -44,6 +44,7 @@ function App() {
       ...inputs,
       [name]: value,
     });
+    clearInterval(intervalDado);
   };
 
   const handleAdicionarFilme = (e) => {
@@ -71,7 +72,6 @@ function App() {
   };
 
   const handleSorteio = (e) => {
-    clearInterval(intervalDado);
     let index;
     for (let i = 0; i < 5; i++) {
       index = Math.floor(Math.random().toPrecision(7) * listaFilmes.length);
@@ -82,8 +82,8 @@ function App() {
       dispararMensagemValidacao("Você realizou muitos sorteios 😵 🤯");
     } else {
       setFilmesSorteados((current) => [...current, listaFilmes[index]]);
-      console.log(ListaFilmesSorteados);
     }
+    clearInterval(intervalDado);
   };
   //funções genéricas
 
@@ -132,6 +132,9 @@ function App() {
         <h1>Escolhedor de filmes-ilmes 🎥</h1>
         <div className="grid">
           <div>
+            <button onClick={handleAdicionarFilme} id="botao_adicionar">
+              Adiconar filme
+            </button>
             <input
               type="text"
               placeholder="nome do filme"
@@ -142,13 +145,6 @@ function App() {
                 if (e.key === "Enter")
                   document.querySelector("#botao_adicionar").click();
               }}
-            />
-            <button onClick={handleAdicionarFilme} id="botao_adicionar">
-              Adiconar filme
-            </button>
-            <ListaFilmes
-              arrFilmes={listaFilmes}
-              onRemoverFilme={handleRemoverFilme}
             />
             <center>
               <div style={{ display: "inline-block" }} className="shake">
@@ -164,13 +160,19 @@ function App() {
                 </a>
               </div>
             </center>
+            <ListaFilmes
+              arrFilmes={listaFilmes}
+              onRemoverFilme={handleRemoverFilme}
+            />
           </div>
-          <ListaFilmesSorteados
-            arrfilmesSorteados={filmesSorteados}
-            onLimparSorteados={() => {
-              setFilmesSorteados([]);
-            }}
-          />
+          <div className="container">
+            <ListaFilmesSorteados
+              arrfilmesSorteados={filmesSorteados}
+              onLimparSorteados={() => {
+                setFilmesSorteados([]);
+              }}
+            />
+          </div>
         </div>
       </main>
     </div>
